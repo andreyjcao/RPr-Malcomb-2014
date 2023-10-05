@@ -1,6 +1,6 @@
 ---
 title: "Reproduction Analysis of Malcomb et al 2014"
-author: "Joseph Holler, Kufre Udoh, Drew An-Pham, Middlebury Open GIScience Classes"
+author: "Joseph Holler, Kufre Udoh, Drew An-Pham, Andrey Cao (Middlebury Open GIScience Classes)"
 date: "`r Sys.Date()`"
 output: pdf_document
 editor_options:
@@ -383,6 +383,7 @@ fl <- read_stars(here(public_r, "flood.tif")) %>%
   st_set_crs(4326) 
 ```
 
+#skip this
 ## Household DHS data
 
 Geographic USAID Demographic and Health Survey (DHS) data requires pre-approved access clearance and login credentials from the DHS Program.
@@ -667,6 +668,7 @@ ta_capacity_t %>% saveRDS(here(public_d, "adaptive_capacity.RDS"))
 rm(list=c("dhsclusters", "dhshh", "cluster_ta", "hh_capacity_t", "ta_capacity_t"))
 ```
 
+#skip to here
 Load aggregated public adaptive capacity data.
 
 ```{r load-TA-adaptive-capacity}
@@ -1215,3 +1217,9 @@ write_stars(vulnerability_r, here(public_d, "fig5diff.tif"), layer = "diffv")
 write_stars(vulnerability_r, here(public_d, "fig5or.tif"), layer = "orv")
 write_stars(vulnerability_r, here(public_d, "fig5rp.tif"), layer = "rpv")
 ```
+
+#Discussion
+
+#Conclusion
+
+#Rationale for updated report
