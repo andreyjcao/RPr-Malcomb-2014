@@ -1088,7 +1088,7 @@ This contradicts both the original figure 5 as well as the methodology section o
 
 ```{r combined-vulnerability-with-wrong-label}
 # final output (adding component rasters)
-vulnerability_r_wrong <- (capacity_r) + sensitivity_r - (drought_r + flood_r)
+vulnerability_r_wrong <- capacity_r + sensitivity_r - (drought_r + flood_r)
 # 100 = highest vulnerability, 0 = lowest vulnerability
 names(vulnerability_r_wrong) <- "vulnerability (wrong)"
 plot(vulnerability_r_wrong)
@@ -1099,7 +1099,7 @@ vuln_min_wrong <- min(vulnerability_r_wrong[[1]],na.rm = TRUE)
 ```
 
 ```{r vulnerability-wrong-map}
-vuln_map = ggplot() +
+vuln_map_wrong = ggplot() +
   geom_stars(data = vulnerability_r_wrong) +
   scale_fill_gradient(
     low = "#FFFF75",
@@ -1118,7 +1118,7 @@ vuln_map = ggplot() +
     axis.title.y = element_blank()
   ) +   coord_quickmap()
 
-vuln_map
+vuln_map_wrong
 ```
 
 We can tell this is wrong because there are negative vulnerability scores. 
