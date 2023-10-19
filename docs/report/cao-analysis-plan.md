@@ -9,11 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Planned Revisions to Reproduction of Malcomb (2014)
+# Planned Revisions to Reproduction of Malcomb (2014)
 
 Author: Andrey (Andy) Cao
 
-##Analysis
+## Analysis
 
 To better the reproducibility study of Malcomb (2014), I will be expanding the written analysis and more directly addressing discrepancies between the original study and the reproduction. 
 
@@ -24,7 +24,7 @@ This will provide the most updated conclusions of the reproducibility study.
 In addition to more comprehensive written analysis of the reproduction, I will also address the confusion caused by the inconsistent figure labeling of the original study. 
 In order to clearly represent the differences between the original study and the reproduction, I will add figures and comments to demonstrate the inconsistency with the figure labels.
 
-##Results
+## Results
 
 The addition of a comprehensive discussion section will analyze each choice and deviation (along with the corresponding result) within the reproduction study and compare them to the original study.
 The discussion section will also help explain the reasoning behind each choice/deviation.
@@ -35,7 +35,7 @@ Within the code, I will create figures based on the figure labels presented in t
 With annotations, I will then note the discrepancies between the original labels and the figures of the original and the reproductions. 
 The addition of figures and annotations will be accompanied by additions to the discussion section to strengthen clarity of the study. 
 
-##Discussion
+## Discussion
 
 If the discussion, conclusion, and rationale sections showcase the changes, the results, and an understanding of the reproduction, then the study will have a more clear and organized analysis for future reproductions.
 If the code and the discussion addresses the inconsistent labeling of the original study's figures, then the study will have a more direct explanation for the discrepancies between the original study and the equations used for the reproduction.
