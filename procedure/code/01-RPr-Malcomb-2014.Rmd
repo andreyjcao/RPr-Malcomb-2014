@@ -1093,6 +1093,34 @@ vulnerability_r_wrong <- (capacity_r) + sensitivity_r - (drought_r + flood_r)
 names(vulnerability_r_wrong) <- "vulnerability (wrong)"
 plot(vulnerability_r_wrong)
 ```
+```{r find break & limit values for vulnerability (wrong) map}
+vuln_max_wrong <- max(vulnerability_r_wrong[[1]],na.rm = TRUE)
+vuln_min_wrong <- min(vulnerability_r_wrong[[1]],na.rm = TRUE)
+```
+
+```{r vulnerability-wrong-map}
+vuln_map = ggplot() +
+  geom_stars(data = vulnerability_r_wrong) +
+  scale_fill_gradient(
+    low = "#FFFF75",
+    high = "#CF4611",
+    breaks = c(vuln_min_wrong, vuln_max_wrong),
+    labels = c("Lower Vulnerability", "Higher Vulnerability"),
+    na.value = "transparent",
+    guide = "colourbar",
+    limits = c(vuln_min_wrong, vuln_max_wrong)
+  ) +
+  labs(title = "Malawi Vulnerability to Climate Change (Wrong)") +
+  theme_minimal() +
+  theme(
+    legend.title = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  ) +   coord_quickmap()
+
+vuln_map
+```
+
 We can tell this is wrong because there are negative vulnerability scores. 
 This error showcases that the equation on the original figure 5 does not reflect what the original figure is representing. 
 
@@ -1111,7 +1139,6 @@ vulnerability_r <- (40 - capacity_r) + sensitivity_r + drought_r + flood_r
 names(vulnerability_r) <- "vulnerability"
 plot(vulnerability_r)
 ```
-
 
 ```{r find break & limit values for vulnerability map}
 vuln_max <- max(vulnerability_r[[1]],na.rm = TRUE)
