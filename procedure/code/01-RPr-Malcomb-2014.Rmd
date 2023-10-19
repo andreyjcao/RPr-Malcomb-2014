@@ -383,7 +383,7 @@ fl <- read_stars(here(public_r, "flood.tif")) %>%
   st_set_crs(4326) 
 ```
 
-#skip this
+#SKIP THIS
 ## Household DHS data
 
 Geographic USAID Demographic and Health Survey (DHS) data requires pre-approved access clearance and login credentials from the DHS Program.
@@ -668,7 +668,7 @@ ta_capacity_t %>% saveRDS(here(public_d, "adaptive_capacity.RDS"))
 rm(list=c("dhsclusters", "dhshh", "cluster_ta", "hh_capacity_t", "ta_capacity_t"))
 ```
 
-#skip to here
+#SKIP UNTIL HERE
 Load aggregated public adaptive capacity data.
 
 ```{r load-TA-adaptive-capacity}
