@@ -660,6 +660,30 @@ ta_capacity_t <- hh_capacity_t %>%
   )
 ```
 
+```{r NEW-aggregate-capacity-to-tas}
+ta_capacity_t <- hh_capacity_t %>% 
+  group_by(ta_id) %>%
+  summarize(
+    capacity_avg = mean(capacity),
+    capacity_min = min(capacity),
+    capacity_max = max(capacity),
+    capacity_sd = sd(capacity),
+    n_hh = n(),
+    livestock_avg = mean(livestock),
+    sick_avg = mean(sick), 
+    land_avg = mean(land), 
+    wealth_avg = mean(wealth), 
+    orphans_avg = mean(orphans), 
+    water_avg = mean(water), 
+    electricity_avg = mean(electricity), 
+    cooking_avg = mean(cooking), 
+    femalehh_avg = mean(femalehh), 
+    cellphone_avg = mean(cellphone), 
+    radio_avg = mean(radio), 
+    urban_avg = mean(urban), 
+  )
+```
+
 Now that household adaptive capacity data has been aggregated, they may be saved to the `data\derived\public`
 directory.
 
@@ -1058,10 +1082,22 @@ Calculate an aggregated vulnerability score by adding low adaptive capacity (inv
 $$
 Vulnerability = (40 - Adaptive Capacity) + Livelihood Sensitivity + Drought Exposure + Flood Risk
 $$
+$$
+Vulnerability = assets + access + livelihoods - exposure
+$$
+
 
 ```{r combined-vulnerability}
 # final output (adding component rasters)
 vulnerability_r <- (40 - capacity_r) + sensitivity_r + drought_r + flood_r 
+# 100 = highest vulnerability, 0 = lowest vulnerability
+names(vulnerability_r) <- "vulnerability"
+plot(vulnerability_r)
+```
+#####EDIT
+```{r NEW combined-vulnerability}
+# final output (adding component rasters)
+vulnerability_r <- (40 - capacity_r) + sensitivity_r - (drought_r + flood_r)
 # 100 = highest vulnerability, 0 = lowest vulnerability
 names(vulnerability_r) <- "vulnerability"
 plot(vulnerability_r)
