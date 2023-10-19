@@ -710,6 +710,8 @@ paste(nrow(ta_capacity_t),
 
 Finding scores for 215 traditional authorities is surprising, and most likely relates to differences in discovery and treatment of geometry errors and missing data. The reason(s) for these differences cannot be determined with the content of the original manuscript.
 
+### Addressing inconsistent figure labels
+
 ### Mapping adaptive capacity
 
 Join adaptive capacity data to geographic TAs and rescale in attempt to match original publication.
@@ -1077,27 +1079,34 @@ plot(sensitivity_r)
 
 ### Vulnerability score
 
+Based on the original study's figure 5, the following equation was used to represent vulnerability scores. 
+
+$$
+Vulnerability = assets + access + livelihoods - exposure
+$$
+This contradicts both the original figure 5 as well as the methodology section of the study which states the equation below is equal to the household resilience score. 
+
+```{r combined-vulnerability-with-wrong-label}
+# final output (adding component rasters)
+vulnerability_r_wrong <- (capacity_r) + sensitivity_r - (drought_r + flood_r)
+# 100 = highest vulnerability, 0 = lowest vulnerability
+names(vulnerability_r_wrong) <- "vulnerability (wrong)"
+plot(vulnerability_r_wrong)
+```
+We can tell this is wrong because there are negative vulnerability scores. 
+This error showcases that the equation on the original figure 5 does not reflect what the original figure is representing. 
+
+#### Addressing inconsistent figure (labels?)
+
 Calculate an aggregated vulnerability score by adding low adaptive capacity (invert adaptive capacity by subtracting from the maximum score of 40), livelihood sensitivity, drought exposure, and flood risk.
 
 $$
 Vulnerability = (40 - Adaptive Capacity) + Livelihood Sensitivity + Drought Exposure + Flood Risk
 $$
-$$
-Vulnerability = assets + access + livelihoods - exposure?
-$$
-
 
 ```{r combined-vulnerability}
 # final output (adding component rasters)
 vulnerability_r <- (40 - capacity_r) + sensitivity_r + drought_r + flood_r 
-# 100 = highest vulnerability, 0 = lowest vulnerability
-names(vulnerability_r) <- "vulnerability"
-plot(vulnerability_r)
-```
-#####EDIT
-```{r NEW combined-vulnerability}
-# final output (adding component rasters)
-vulnerability_r <- (40-capacity_r) + sensitivity_r - (drought_r + flood_r)
 # 100 = highest vulnerability, 0 = lowest vulnerability
 names(vulnerability_r) <- "vulnerability"
 plot(vulnerability_r)
