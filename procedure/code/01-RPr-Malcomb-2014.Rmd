@@ -1098,7 +1098,7 @@ We will attempt to reproduce Figure 5 using this equation to demonstrate why the
 # final output (adding component rasters)
 vulnerability_r_wrong <- capacity_r + sensitivity_r - (drought_r + flood_r)
 # 100 = highest vulnerability, 0 = lowest vulnerability
-names(vulnerability_r_wrong) <- "vulnerability (wrong)"
+names(vulnerability_r_wrong) <- "vulnerability_wrong"
 plot(vulnerability_r_wrong)
 ```
 ```{r find break & limit values for vulnerability (wrong) map}
@@ -1129,7 +1129,96 @@ vuln_map_wrong = ggplot() +
 vuln_map_wrong
 ```
 We can tell this is wrong because there are negative vulnerability scores. 
-This error showcases that the equation on the original figure 5 does not reflect what the original figure is representing. 
+This error showcases that the equation on the original Figure 5 does not reflect what the original figure is representing. 
+We will then compare it to the original Malcomb (2014) study's Figure 5.
+
+```{r load-original-fig5, warning=FALSE, fig.width=4, fig.height=4}
+orfig5vect = 
+  read_sf(here(public_d, "georef_bg.gpkg"), 
+          layer="georef_bg") %>%
+  mutate(bg_mean = bmean + gmean)
+# load original georeferenced figure 5 data
+
+orfig5rast <- st_rasterize(orfig5vect["bg_mean"], template=blank)
+# convert mean of blue and green values into a raster using ta_final as a reference for raster
+# extent, cell size, CRS, etc.
+
+orvmin <- min(orfig5rast$bg_mean, na.rm=TRUE)
+ormax <- max(orfig5rast$bg_mean, na.rm=TRUE)
+orfig5rast <- orfig5rast %>% 
+  mutate(orv = (1 - (bg_mean - orvmin) / (ormax - orvmin)) * 100)
+# or is Re-scaled from 0 to 100 with (value - min)/(max - min)
+# it is also inverted, because higher blue values are less red
+rm(orvmin, orvmax)
+```
+
+```{r compare-fig5, warning=FALSE, fig.width=4, fig.height=4}
+rpvmin <- min(vulnerability_r_wrong$vulnerability, na.rm= TRUE)
+rpvmax <- max(vulnerability_r_wrong$vulnerability, na.rm= TRUE)
+vulnerability_r_wrong = vulnerability_r_wrong %>% 
+  mutate(rpv = (vulnerability_wrong - rpvmin) / (rpvmax - rpvmin) * 100)
+ # rpv is Re-scaled from 0 to 100 with (value - min)/(max - min)
+rm(rpvmin, rpvmax)
+
+vulnerability_r_wrong$orv <- orfig5rast$orv 
+vulnerability_r_wrong$diffv <- vulnerability_r_wrong$rpv - vulnerability_r_wrong$orv
+# calculate difference between the original and reproduction,
+# for purposes of mapping
+
+vulnerability_p <- st_as_sf(vulnerability_r_wrong)
+# convert raster to vector points to simplify plotting and correlation testing
+
+plot(
+  vulnerability_p$orv,
+  vulnerability_p$rpv,
+  xlab = "Original Study",
+  ylab = "Reproduction Study (wrong)",
+  #asp = 1,
+  xlim = c(0, 100),
+  ylim = c(0, 100),
+  col = rgb(0, 0, 0, 0.2),
+  cex = 0.7
+)
+title("Vulnerability Scores")
+abline(lm(vulnerability_p$rpv ~ vulnerability_p$orv))
+# create scatterplot of original results and reproduction results
+
+cor.test(vulnerability_p$orv, vulnerability_p$rpv, method="spearman")
+# Spearman's Rho correlation test
+```
+
+```{r vulnerability-difference-map}
+# find range of values for divergent color scheme
+range <- ceiling(max(abs(max(vulnerability_r_wrong$diffv, na.rm = TRUE)),
+             abs(min(vulnerability_r_wrong$diffv, na.rm = TRUE))))
+
+# map can be improved by:
+# switch colors to a Colorbrewer divergent scale
+# use grey for lat / long labels
+# switch to using tmap package
+vuln_diff_map_wrong = ggplot() +
+  geom_stars(data = vulnerability_r_wrong["diffv"]) +
+  scale_fill_gradient2(
+    low = "#e9a3c9",
+    high = "#beaed4",
+    breaks = c(-range,0,range),
+    labels = c(paste0("-",range), "0", paste0(range)),
+    na.value = "transparent",
+    guide = "colourbar",
+    limits = c(-range,range),
+    name = "Vulnerability:\nReproduction -\nOriginal (Wrong)"#you want centered around zero, so make larger # the ends
+  ) +
+  coord_quickmap() +  
+  theme_minimal() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+
+vuln_diff_map_wrong
+```
+
+Note: The vulnerability difference is the 
 
 #### Fixing the vulnerability equation
 
