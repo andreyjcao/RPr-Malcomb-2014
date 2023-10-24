@@ -53,7 +53,7 @@ The working hypotheses are therefore:
 
 > H1: There is no perfect positive correlation between Malcomb et al's ranking of traditional authorities by household resilience and our reproduction study's ranking of traditional authorities by household resilience.
 
-> H2: There is no perfect positive between Malcom et al's ranking of locations by climate vulnerability and our reproduction study's ranking of locations by climate vulnerability.
+> H2: There is no perfect positive between Malcomb et al's ranking of locations by climate vulnerability and our reproduction study's ranking of locations by climate vulnerability.
 
 We will evaluate each of these hypotheses using a Spearman's Rho Correlation. A failure to reject these hypotheses would indicate that our results do not exactly match those of the original authors. A positive correlation approaching 1 would indicate a partial reproduction
 
@@ -1106,6 +1106,8 @@ vuln_max_wrong <- max(vulnerability_r_wrong[[1]],na.rm = TRUE)
 vuln_min_wrong <- min(vulnerability_r_wrong[[1]],na.rm = TRUE)
 ```
 
+##### Reproducing Figure 5 (wrong)
+
 ```{r vulnerability-wrong-map}
 vuln_map_wrong = ggplot() +
   geom_stars(data = vulnerability_r_wrong) +
@@ -1166,7 +1168,7 @@ orfig5rast <- orfig5rast %>%
 rm(orvmin, orvmax)
 ```
 
-```{r compare-fig5, warning=FALSE, fig.width=4, fig.height=4}
+```{r compare-fig5-with-wrong, warning=FALSE, fig.width=4, fig.height=4}
 rpvmin <- min(vulnerability_r_wrong$vulnerability, na.rm= TRUE)
 rpvmax <- max(vulnerability_r_wrong$vulnerability, na.rm= TRUE)
 vulnerability_r_wrong = vulnerability_r_wrong %>% 
@@ -1201,7 +1203,7 @@ cor.test(vulnerability_p$orv, vulnerability_p$rpv, method="spearman")
 # Spearman's Rho correlation test
 ```
 
-```{r vulnerability-difference-map}
+```{r vulnerability-difference-map-with-wrong}
 # find range of values for divergent color scheme
 range <- ceiling(max(abs(max(vulnerability_r_wrong$diffv, na.rm = TRUE)),
              abs(min(vulnerability_r_wrong$diffv, na.rm = TRUE))))
@@ -1257,7 +1259,7 @@ vuln_max <- max(vulnerability_r[[1]],na.rm = TRUE)
 vuln_min <- min(vulnerability_r[[1]],na.rm = TRUE)
 ```
 
-### Reproduction figure 5
+##### Reproduction Figure 5 (right)
 
 ```{r vulnerability-map}
 vuln_map = ggplot() +
@@ -1371,8 +1373,4 @@ write_stars(vulnerability_r, here(public_d, "fig5or.tif"), layer = "orv")
 write_stars(vulnerability_r, here(public_d, "fig5rp.tif"), layer = "rpv")
 ```
 
-#Discussion
 
-#Conclusion
-
-#Rationale for updated report
