@@ -1092,7 +1092,7 @@ $$
 Vulnerability = assets + access + livelihoods - exposure
 $$
 This contradicts both the original Figure 5's map as well as the methodology section of the study which states the equation below is equal to the 'household resilience score.'
-We will attempt to reproduce Figure 5 using this equation to demonstrate why the original title is inconsistent with the original figure. 
+We will attempt to reproduce Figure 5 using this equation to demonstrate why the original equation is inconsistent with the original figure. 
 
 ```{r combined-vulnerability-with-wrong-label}
 # final output (adding component rasters)
@@ -1131,6 +1131,20 @@ vuln_map_wrong
 We can tell this is wrong because there are negative vulnerability scores. 
 This error showcases that the equation on the original Figure 5 does not reflect what the original figure is representing. 
 We will then compare it to the original Malcomb (2014) study's Figure 5.
+
+### Original study figure 5
+
+Comparing the reproduction of figure 5 with the original figure 5 requires first digitizing the original figure 5 (unclassified choropleth map with yellow to red gradient) in QGIS as follows:
+
+1. Copy image of figure 5 from the original publication `pdf` file using Adobe Acrobat Pro
+2. Paste the image and save as a `.png` file with pixel dimensions 1949
+    by 2811
+3. Use QGIS 3.26.3 Georeference the map image to match `ta_v.gpkg` using WGS 84 geographic coordinates (epsg:4326). Use linear georeferencing with points in `...`
+4. Convert `ta_capacity.tif` raster to vector polygons
+5. Extract the average blue and green bands from the georeferenced map image using `zonal statistics`
+6. Save results as `georef_bg.gpkg`.
+
+To approximate data values from the yellow to red gradient of the original map, the blue and green bands are then added, inverted, and rescaled to a range from 0 to 100.
 
 ```{r load-original-fig5, warning=FALSE, fig.width=4, fig.height=4}
 orfig5vect = 
@@ -1218,11 +1232,13 @@ vuln_diff_map_wrong = ggplot() +
 vuln_diff_map_wrong
 ```
 
-Note: The vulnerability difference is the 
+Note: The vulnerability difference has a range of +100 to -100. 
 
 #### Fixing the vulnerability equation
 
-Calculate an aggregated vulnerability score by adding low adaptive capacity (invert adaptive capacity by subtracting from the maximum score of 40), livelihood sensitivity, drought exposure, and flood risk. This equation was constructed using a common equation among outside literature including the IPCC (Intergovernmental Panel on Climate Change).
+Since Figure 5's original equation is not consistent with the figure, we will use a new equation that more accurately represents the figure.
+WE will calculate an aggregated vulnerability score by adding low adaptive capacity (invert adaptive capacity by subtracting from the maximum score of 40), livelihood sensitivity, drought exposure, and flood risk. 
+This equation was constructed using a common equation among outside literature including the IPCC (Intergovernmental Panel on Climate Change).
 
 $$
 Vulnerability = (40 - Adaptive Capacity) + Livelihood Sensitivity + Drought Exposure + Flood Risk
@@ -1276,40 +1292,6 @@ write_sf(ta_v, here(results), "ta")
 write_sf(lhz_v, here(results), "lhz")
 ```
 
-
-### Original study figure 5
-
-Comparing the reproduction of figure 5 with the original figure 5 requires first digitizing the original figure 5 (unclassified choropleth map with yellow to red gradient) in QGIS as follows:
-
-1. Copy image of figure 5 from the original publication `pdf` file using Adobe Acrobat Pro
-2. Paste the image and save as a `.png` file with pixel dimensions 1949
-    by 2811
-3. Use QGIS 3.26.3 Georeference the map image to match `ta_v.gpkg` using WGS 84 geographic coordinates (epsg:4326). Use linear georeferencing with points in `...`
-4. Convert `ta_capacity.tif` raster to vector polygons
-5. Extract the average blue and green bands from the georeferenced map image using `zonal statistics`
-6. Save results as `georef_bg.gpkg`.
-
-To approximate data values from the yellow to red gradient of the original map, the blue and green bands are then added, inverted, and rescaled to a range from 0 to 100.
-
-```{r load-original-fig5, warning=FALSE, fig.width=4, fig.height=4}
-orfig5vect = 
-  read_sf(here(public_d, "georef_bg.gpkg"), 
-          layer="georef_bg") %>%
-  mutate(bg_mean = bmean + gmean)
-# load original georeferenced figure 5 data
-
-orfig5rast <- st_rasterize(orfig5vect["bg_mean"], template=blank)
-# convert mean of blue and green values into a raster using ta_final as a reference for raster
-# extent, cell size, CRS, etc.
-
-orvmin <- min(orfig5rast$bg_mean, na.rm=TRUE)
-ormax <- max(orfig5rast$bg_mean, na.rm=TRUE)
-orfig5rast <- orfig5rast %>% 
-  mutate(orv = (1 - (bg_mean - orvmin) / (ormax - orvmin)) * 100)
-# or is Re-scaled from 0 to 100 with (value - min)/(max - min)
-# it is also inverted, because higher blue values are less red
-rm(orvmin, orvmax)
-```
 
 ### Compare vulnerability result
 
@@ -1380,6 +1362,8 @@ vuln_diff_map = ggplot() +
 
 vuln_diff_map
 ```
+
+Note: The vulnerability difference has a range of +84 to -84.
 
 ```{r save-fig5-comparison-data}
 write_stars(vulnerability_r, here(public_d, "fig5diff.tif"), layer = "diffv")
