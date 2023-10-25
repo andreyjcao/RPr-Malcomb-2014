@@ -516,6 +516,7 @@ paste(sum(is.na(cluster_ta$ta_id)),
 
 paste(sum(is.na(dhshh$ta_id)), "out of", nrow(dhsclusters), "households missing data due to failed spatial join" )
 ```
+
 Many household surveys contain inconclusive answers (e.g. "I don't know") or are missing data for survey questions used in the adaptive capacity calculation.
 The livestock variable will be calculated as a sum of four livestock types, so we remove any household with uncertain answers about any of the livestock types and remove households with missing data for all livestock types.
 Households with answers about some livestock types and missing data for others are still included in the data.
@@ -1084,7 +1085,7 @@ plot(sensitivity_r)
 
 ### Vulnerability score
 
-#### Addressing inconsistent labeling
+#### Addressing inconsistent Figure 5 equation
 
 Based on the original Malcomb et al (2014) study's Figure 5, the following equation was used to represent vulnerability scores. 
 
@@ -1134,7 +1135,7 @@ We can tell this is wrong because there are negative vulnerability scores.
 This error showcases that the equation on the original Figure 5 does not reflect what the original figure is representing. 
 We will then compare it to the original Malcomb (2014) study's Figure 5.
 
-### Original study figure 5
+##### Original study Figure 5
 
 Comparing the reproduction of figure 5 with the original figure 5 requires first digitizing the original figure 5 (unclassified choropleth map with yellow to red gradient) in QGIS as follows:
 
@@ -1167,6 +1168,8 @@ orfig5rast <- orfig5rast %>%
 # it is also inverted, because higher blue values are less red
 rm(orvmin, orvmax)
 ```
+
+##### Comparing the (wrong) equation with the original Figure 5
 
 ```{r compare-fig5-with-wrong, warning=FALSE, fig.width=4, fig.height=4}
 rpvmin <- min(vulnerability_r_wrong$vulnerability, na.rm= TRUE)
@@ -1234,7 +1237,7 @@ vuln_diff_map_wrong = ggplot() +
 vuln_diff_map_wrong
 ```
 
-Note: The vulnerability difference has a range of +100 to -100. 
+Note: The vulnerability difference has a range of +100 to -100 and the Spearman's Rho correlation is negative. 
 
 #### Fixing the vulnerability equation
 
@@ -1295,7 +1298,7 @@ write_sf(lhz_v, here(results), "lhz")
 ```
 
 
-### Compare vulnerability result
+##### Comparing the (right) equation with the original Figure 5
 
 ```{r compare-fig5, warning=FALSE, fig.width=4, fig.height=4}
 rpvmin <- min(vulnerability_r$vulnerability, na.rm= TRUE)
@@ -1365,7 +1368,7 @@ vuln_diff_map = ggplot() +
 vuln_diff_map
 ```
 
-Note: The vulnerability difference has a range of +84 to -84.
+Note: The vulnerability difference has a range of +84 to -84 and the Spearman's Rho correlation is positive.
 
 ```{r save-fig5-comparison-data}
 write_stars(vulnerability_r, here(public_d, "fig5diff.tif"), layer = "diffv")
@@ -1374,3 +1377,75 @@ write_stars(vulnerability_r, here(public_d, "fig5rp.tif"), layer = "rpv")
 ```
 
 
+# Replication results
+
+For the reproduction of Figure 4, we could not perfectly reproduce the original figure.
+The reproduced figure had differences ranging from +1 to -2 in adaptive capacity. 
+
+For the reproduction of Figure 5, we also could not perfectly reproduce the original figure.
+The reproduced figure had differences ranging from +84 to -84 in vulnerability scores.
+
+Neither Spearman’s Rho Correlation tests of the reproduced figures showcased a perfect positive correlation. 
+Therefore, we fail to reject our two working hypotheses, indicating that our work does not match those of the original authors.  
+
+
+# Discussion
+
+## Deviations and fixes
+
+While loading the metadata from the original Malcomb et al (2014) study, we found that the traditional authority (TA) data erroneously included some populated areas of land in water body features. 
+We then extracted the features and found areas of Lake Malawi that are actually land by buffering lakes by 500 meters and clipping the Lake Malawi TA features.
+Then we calculatde new unique second level ID's as 1000 times the row numbe and removed splinter polygons by selecting polygons over 4 km\^2 with centroids intersecting livelihood zones.
+Lastly, we merged the fixed errors in the TA data back into the rest of the data. 
+
+UNEP Global Risk Data used in the original Malcomb et al (2014) study could not be accessed online; therefore we used data provided within the research compendium such as loading the aggregated public adaptive capacity data. 
+
+In order to replicate Figure 4 and match the rescaled range of 0 to 40, we supposed that the original authors rescaled with the 40% weight of adaptive capacity in the vulnerability model. 
+We multiplied the theoretical domain of 0 to 1.6 by 25 to achieve a possible domain of 0 to 40. 
+
+In order to replicate Figure 5, we rasterized adaptive capacity. 
+We created a mask with the adaptive capacity results so that lakes, conservation areas, and traditional authorities with no data would not skew the classification / rescaling of drought exposure. 
+
+Additionally, we clipped, warped, classified (into quintile classes), and rescaled the variables drought exposure and flood risk.
+
+For the livelihood and sensitivity score, we calculated the indicators from FEWSnet livelihood zone baseline profiles of poor households according to table 2, rescaled to quintiles, calculated aggregate scores, and converted to a raster grid. 
+
+
+#Checks for reproducibility
+
+When loading the metadata for the reproduction, we created visualizations of the lakes, livelihood zones, and the traditional authorities. 
+Additionally, visualizations helped to identify that the (TA) data includes conservation areas and water bodies that do not contain populated villages. 
+
+In order to compare the reproduced Figure 4 and the original Figure 4, we calculated a map difference between the two maps. 
+The comparative map showcased differences ranging from +1 to -2. 
+Additionally, we conducted a Spearman’s Rho correlation test, and the results did not showcase a perfect positive correlation. 
+
+We then demonstrated the original study’s inconsistent equation presented on Figure 5. 
+By recreating the Figure 5 with the original (wrong) equation, we showcased why the equation presented was not used to make the original figure. 
+
+For both the ‘wrong’ and ‘fixed’ equation reproductions of Figure 5, we calculated Spearman’s Rho correlation tests, plotted the points in relation to the original Figure 5, and plotted a difference map between the reproduction and the original. 
+The vulnerability difference had a range of +100 to -100 and the Spearman's Rho correlation was negative for the ‘wrong’ equation.
+This signifies that not only did the reproduction not match, but the results were negatively correlated. 
+The vulnerability difference had a range of +84 to -84 and the Spearman's Rho correlation was positive for the ‘fixed’ equation.
+Though the results were positively correlated, they were not perfectly positive correlated and did not match the original study. 
+
+
+# Conclusion
+
+We found that neither of the reproduced figures perfectly matched those of the original study.
+This result suggests that we could not reproduce the original figures from the Malcomb et al (2014) study.
+
+Especially when the lives and livelihoods of those living in Malawi may be seriously affected by the construction of Malcomb et als (2014) social vulnerability model, reproducibility would have been a sign of transparency and clarity.
+The failure to reproduce Figures 4 and 5, despite multiple error corrections, suggests that Malcomb et al (2014) may need to improve on their transparency pertaining to how they transformed their metadata to create their figures.
+The increased transparency in this study as well as other studies can help to improve reproduction.
+This will strengthen social vulnerability models which serve an important social and ethical role in how we address the most at-risk populations throughout the world. 
+
+# Rationale for updated report
+
+Modifications to the reproduction of Malcomb et al (2014) focused on the addition of a results, discussion, conclusion and rationale for the updated report.
+Additionally, this new reproduction also more directly addressed the inconsistent labeling and equation in the original study. 
+ 
+The addition of comprehensive results, discussion, conclusion, and rationale section promotes a better understanding of the reproduction, and the study will have a more clear and organized analysis for future reproductions
+
+The addition of figures and annotation improves the reproduction’s explanations of the discrepancies and inconsistencies of the figures in the original study. 
+The addition of figures and annotations are accompanied by additions to the discussion section to strengthen the clarity and the transparency of the reproduction.
