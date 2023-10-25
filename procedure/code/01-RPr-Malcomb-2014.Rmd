@@ -1411,7 +1411,7 @@ Additionally, we clipped, warped, classified (into quintile classes), and rescal
 For the livelihood and sensitivity score, we calculated the indicators from FEWSnet livelihood zone baseline profiles of poor households according to table 2, rescaled to quintiles, calculated aggregate scores, and converted to a raster grid. 
 
 
-#Checks for reproducibility
+## Checks for reproducibility
 
 When loading the metadata for the reproduction, we created visualizations of the lakes, livelihood zones, and the traditional authorities. 
 Additionally, visualizations helped to identify that the (TA) data includes conservation areas and water bodies that do not contain populated villages. 
