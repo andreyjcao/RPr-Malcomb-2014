@@ -980,7 +980,7 @@ plot(drought_r)
 
 Clip and warp flood risk to match our extent and spatial resolution.
 
-```{r clip-map-drought-exposure, warning = F}
+```{r clip-map-flood-risk, warning = F}
 names(fl) <- "fl"
 # convert from factors to numeric
 fl$fl <- fl$fl %>% as.character() %>% as.numeric() %>% matrix(dim(fl)[1])
