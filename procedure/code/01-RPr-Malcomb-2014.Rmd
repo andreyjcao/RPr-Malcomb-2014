@@ -1131,9 +1131,10 @@ vuln_map_wrong = ggplot() +
 
 vuln_map_wrong
 ```
-We can tell this is wrong because there are negative vulnerability scores. 
+
+The presence of negative vulnerability scores suggest an inaccurate figure methodology.
 This error showcases that the equation on the original Figure 5 does not reflect what the original figure is representing. 
-We will then compare it to the original Malcomb (2014) study's Figure 5.
+We will then compare it to the original Malcomb et al. (2014) study's Figure 5.
 
 ##### Original study Figure 5
 
@@ -1242,7 +1243,7 @@ Note: The vulnerability difference has a range of +100 to -100 and the Spearman'
 #### Fixing the vulnerability equation
 
 Since Figure 5's original equation is not consistent with the figure, we will use a new equation that more accurately represents the figure.
-WE will calculate an aggregated vulnerability score by adding low adaptive capacity (invert adaptive capacity by subtracting from the maximum score of 40), livelihood sensitivity, drought exposure, and flood risk. 
+We will calculate an aggregated vulnerability score by adding low adaptive capacity (invert adaptive capacity by subtracting from the maximum score of 40), livelihood sensitivity, drought exposure, and flood risk. 
 This equation was constructed using a common equation among outside literature including the IPCC (Intergovernmental Panel on Climate Change).
 
 $$
@@ -1393,12 +1394,12 @@ Therefore, we fail to reject our two working hypotheses, indicating that our wor
 
 ## Deviations and fixes
 
-While loading the metadata from the original Malcomb et al (2014) study, we found that the traditional authority (TA) data erroneously included some populated areas of land in water body features. 
+While loading the metadata from the original Malcomb et al. (2014) study, we found that the traditional authority (TA) data erroneously included some populated areas of land in water body features. 
 We then extracted the features and found areas of Lake Malawi that are actually land by buffering lakes by 500 meters and clipping the Lake Malawi TA features.
-Then we calculatde new unique second level ID's as 1000 times the row numbe and removed splinter polygons by selecting polygons over 4 km\^2 with centroids intersecting livelihood zones.
+Then we calculated new unique second level ID's as 1000 times the row number and removed splinter polygons by selecting polygons over 4 km\^2 with centroids intersecting livelihood zones.
 Lastly, we merged the fixed errors in the TA data back into the rest of the data. 
 
-UNEP Global Risk Data used in the original Malcomb et al (2014) study could not be accessed online; therefore we used data provided within the research compendium such as loading the aggregated public adaptive capacity data. 
+UNEP Global Risk Data used in the original Malcomb et al. (2014) study could not be accessed online; therefore we used data provided within the research compendium such as loading the aggregated public adaptive capacity data. 
 
 In order to replicate Figure 4 and match the rescaled range of 0 to 40, we supposed that the original authors rescaled with the 40% weight of adaptive capacity in the vulnerability model. 
 We multiplied the theoretical domain of 0 to 1.6 by 25 to achieve a possible domain of 0 to 40. 
@@ -1435,9 +1436,12 @@ Though the results were positively correlated, they were not perfectly positive 
 We found that neither of the reproduced figures perfectly matched those of the original study.
 This result suggests that we could not reproduce the original figures from the Malcomb et al (2014) study.
 
-Especially when the lives and livelihoods of those living in Malawi may be seriously affected by the construction of Malcomb et als (2014) social vulnerability model, reproducibility would have been a sign of transparency and clarity.
-The failure to reproduce Figures 4 and 5, despite multiple error corrections, suggests that Malcomb et al (2014) may need to improve on their transparency pertaining to how they transformed their metadata to create their figures.
-The increased transparency in this study as well as other studies can help to improve reproduction.
+Malcomb et al's (2014) attempt to construct a social vulnerability model surrounding populations throughout Malawi is a critical feat of research, especially as one of the first sub-national geographic climate change vulnerability models for a developing country.
+As a study that is so crucial to the development of the social vulnerability model as a tool for vulnerable populations, Malcomb et al. would benefit from greater reproducibility and reflect greater transparency and clarity.
+This reproduction study's inability to reproduce Figures 4 and 5, suggests an unclear or ambiguous definition of 'vulnerability' within the wider literature and the Malcomb et al. (2014) study.
+In order to improve this study as well as the wider literature surrounding social vulnerability models, the definition of 'vulnerability' should be uniform and clear. 
+
+The increased transparency in this study as well as other studies can help to improve reproductions.
 This will strengthen social vulnerability models which serve an important social and ethical role in how we address the most at-risk populations throughout the world. 
 
 # Rationale for updated report
